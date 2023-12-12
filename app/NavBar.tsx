@@ -50,8 +50,8 @@ const Navbar = () => {
             <Link href={"/admin"} className="hover:text-rose-500">
               Admin
             </Link>
-            <Link href={"/login"} className="hover:text-rose-500">
-              Login
+            <Link href={"/collegelist"} className="hover:text-rose-500">
+              Collegelist
             </Link>
           </div>
         </div>
