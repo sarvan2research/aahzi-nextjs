@@ -5,12 +5,11 @@ import { ZodError } from "zod";
 import formSchema from "../api/schema/schema";
 import Input from "../components/formInputs/Input";
 import { FormData } from "../components/formInputs/Input";
-import axios from "axios";
 
 const ChatBotForm = () => {
   const [formData, setFormData] = useState<FormData>({
-    name: "",
-    mobileNumber: "",
+    name: "Harish",
+    mobileNumber: "9385637533",
     physicsMarks: 0,
     chemistryMarks: 0,
     mathsMarks: 0,
@@ -19,21 +18,26 @@ const ChatBotForm = () => {
   });
 
   const [errors, setErrors] = useState<Record<string, string>>({});
+  const [touchedFields, setTouchedFields] = useState<Record<string, boolean>>(
+    {}
+  );
   const [cutoffMarks, setCutoffMarks] = useState<number | null>(null);
 
-  const handleInputChange = (e: ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {  
+  const handleInputChange = (
+    e: ChangeEvent<HTMLInputElement | HTMLSelectElement>
+  ) => {
     const { name, value } = e.target;
+    setTouchedFields((prev) => ({ ...prev, [name]: true }));
     const numericValue = name.includes("Marks") ? parseFloat(value) : value;
-    const updatedValue = typeof numericValue === "number" && !isNaN(numericValue) ? numericValue : value;
-    
-    setFormData((prevData) => {
-      const newData = { ...prevData, [name]: updatedValue };
-      return newData;
-    });
+    const updatedValue =
+      typeof numericValue === "number" && !isNaN(numericValue)
+        ? numericValue
+        : value;
+
+    setFormData((prevData) => ({ ...prevData, [name]: updatedValue }));
   };
-  
+
   useEffect(() => {
-    setErrors({});
     const calculatecutoff = () => {
       const maths = formData.mathsMarks;
       const physics = formData.physicsMarks / 2;
@@ -42,24 +46,25 @@ const ChatBotForm = () => {
       const cutoff = maths + physics + chemistry;
       setCutoffMarks(cutoff);
     };
+
     try {
+      formSchema.parse(formData);
       calculatecutoff();
-      console.log('workingg');
-      
+      setErrors({});
     } catch (error) {
       if (error instanceof ZodError) {
         const newErrors: Record<string, string> = {};
         error.errors.forEach((err) => {
           const path = err.path.join(".");
           newErrors[path] = err.message;
-          console.log(newErrors);
+          // console.log(newErrors);
         });
         setErrors(newErrors);
       } else {
         console.error("Form has errors. Please check and correct.", error);
       }
     }
-  }, [formData.chemistryMarks, formData.mathsMarks, formData.physicsMarks]);
+  }, [formData, touchedFields]);
 
   async function userDetail(data: {
     cutoffMarks: number | null;
@@ -86,7 +91,6 @@ const ChatBotForm = () => {
       const data = { ...newFormData, cutoffMarks };
 
       userDetail(data);
-
     } catch (error) {
       // if (error instanceof z.ZodError) {
       //   const newErrors: Record<string, string> = {};
@@ -105,7 +109,7 @@ const ChatBotForm = () => {
     <div className="mt-10 grid place-items-center gap-4">
       <p className="text-5xl font-bold sm:text-3xl">Form</p>
       {/* <div className="flex flex-col w-full"><div className="divider divide-warning"></div></div> */}
-      
+
       <form className="flex justify-center" onSubmit={onSubmit}>
         <div className="space-y-6">
           <div>
@@ -147,9 +151,7 @@ const ChatBotForm = () => {
                 onChange={handleInputChange}
                 suppressHydrationWarning={true}
               >
-                <option>
-                  Select any Course
-                </option>
+                <option>Select any Course</option>
                 <option value="mechanical">Mechanical</option>
                 <option value="eee">EEE</option>
                 <option value="ece">ECE</option>
@@ -173,18 +175,16 @@ const ChatBotForm = () => {
                 onChange={handleInputChange}
                 suppressHydrationWarning={true}
               >
-                <option>
-                  Select your City
-                </option>
-                <option value="salem">Mechanical</option>
-                <option value="salem">EEE</option>
-                <option value="salem">ECE</option>
-                <option value="salem">CSE</option>
-                <option value="salem">Civil</option>
-                <option value="salem">AIDS</option>
-                <option value="salem">IT</option>
-                <option value="salem">Mechatronics</option>
-                <option value="salem">AIML</option>
+                <option>Select your City</option>
+                <option value="salem">Salem</option>
+                <option value="coimbatore">Coimbatore</option>
+                <option value="erode">Erode</option>
+                <option value="chennai">Chennai</option>
+                <option value="madurai">Madurai</option>
+                <option value="tiruppur">Tiruppur</option>
+                <option value="theni">Theni</option>
+                <option value="rameshwaram">Rameshwaram</option>
+                <option value="krishnagiri">Krishnagiri</option>
               </select>
 
               {errors.city && (

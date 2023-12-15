@@ -1,19 +1,10 @@
-'use client';
+"use client";
 import Image from "next/image";
 import Link from "next/link";
-import { useState } from "react";
+import useToggle from "../../api/hooks/useState";
 
 const Navbar = () => {
-  const useToggle = (initialState: any) => {
-    const [toggleValue, setToggleValue] = useState(initialState);
-    const toggler = () => {
-      setToggleValue(!toggleValue);
-    };
-    return [toggleValue, toggler];
-  };
-
   const [toggle, setToggle] = useToggle(false);
-
   return (
     <div>
       <div className="navbar bg-base-100 shadow-xl">
@@ -50,7 +41,7 @@ const Navbar = () => {
             <Link href={"/admin"} className="hover:text-rose-500">
               Admin
             </Link>
-            <Link href={"/collegelist"} className="hover:text-rose-500">
+            <Link href={"/pages/list"} className="hover:text-rose-500">
               Collegelist
             </Link>
           </div>
@@ -100,24 +91,36 @@ const Navbar = () => {
           </div>
         </div>
       </div>
-        {toggle && (
-          <div className="p-4">
-            <div aria-labelledby="dropdownDefaultButton">
-              <Link href={"/"} className="block hover:bg-slate-200 w-fit p-2 hover:text-rose-500 ">
-                Aahzi
-              </Link>
-              <Link href={"/form"} className="block hover:bg-slate-200 w-fit p-2 hover:text-rose-500">
-                Form
-              </Link>
-              <Link href={"/admin"} className="block hover:bg-slate-200 w-fit p-2 hover:text-rose-500">
-                Admin
-              </Link>
-              <Link href={"/login"} className="block hover:bg-slate-200 w-fit p-2 hover:text-rose-500">
-                Login
-              </Link>
-            </div>
+      {toggle && (
+        <div className="p-4">
+          <div aria-labelledby="dropdownDefaultButton">
+            <Link
+              href={"/"}
+              className="block hover:bg-slate-200 w-fit p-2 hover:text-rose-500 "
+            >
+              Aahzi
+            </Link>
+            <Link
+              href={"/form"}
+              className="block hover:bg-slate-200 w-fit p-2 hover:text-rose-500"
+            >
+              Form
+            </Link>
+            <Link
+              href={"/admin"}
+              className="block hover:bg-slate-200 w-fit p-2 hover:text-rose-500"
+            >
+              Admin
+            </Link>
+            <Link
+              href={"/login"}
+              className="block hover:bg-slate-200 w-fit p-2 hover:text-rose-500"
+            >
+              Login
+            </Link>
           </div>
-        )}
+        </div>
+      )}
     </div>
   );
 };
