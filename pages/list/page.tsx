@@ -1,20 +1,22 @@
 "use client";
-import { PrismaClient, GuestUser } from "@prisma/client";
-import { GetServerSideProps } from "next";
-import { useState, useEffect} from "react";
+import { useState, useEffect } from "react";
+import { GuestUser } from "@prisma/client";
 
-const prisma = new PrismaClient();
-
-interface CollegeListProps {
-  CollegeListProps: GuestUser[];
-}
-
-const List = ({ CollegeListProps }: any) => {
-  const [collegelist, setCollegeList] = useState<GuestUser[]>(CollegeListProps);
+const List = () => {
+  const [collegeList, setCollegeList] = useState<GuestUser[]>([]);
 
   useEffect(() => {
-    setCollegeList(collegelist);
-  }, [collegelist]);
+    const fetchCutOffData = async () => {
+      try {
+        const response = await fetch("/api/userCutoffCoDet");
+        const data = await response.json();
+        setCollegeList(data);
+      } catch (error) {
+        console.log(error);
+      }
+    };
+    fetchCutOffData();
+  }, []);
 
   return (
     <div>
@@ -45,7 +47,7 @@ const List = ({ CollegeListProps }: any) => {
             </tr>
           </thead>
           <tbody>
-            {collegelist.map((data) => (
+            {collegeList.map((data) => (
               <tr key={data.id}>
                 <th>{data.id}</th>
                 <th>{data.name}</th>
@@ -60,26 +62,11 @@ const List = ({ CollegeListProps }: any) => {
   );
 };
 
-export const getServerSideProps: GetServerSideProps<
-  CollegeListProps
-> = async () => {
-  try {
-    const collegeList: GuestUser[] = await prisma.guestUser.findMany();
-    console.log(collegeList);
-
-    return {
-      props: {
-        CollegeListProps: collegeList,
-      },
-    };
-  } catch (error) {
-    console.log("error", error);
-    return {
-      props: {
-        CollegeListProps: [],
-      },
-    };
-  }
-};
+// export const getServerSideProps = async(context : GetServerSidePropsContext) => {
+//   const data = await fetchCutOffData(context);
+//   return{
+//     props : data
+//   }
+// }
 
 export default List;

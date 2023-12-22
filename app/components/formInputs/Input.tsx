@@ -19,7 +19,7 @@ export interface FormData {
   chemistryMarks: number;
   mathsMarks: number;
   course: string;
-  city : string;
+  community : string;
 }
 
 const Input = ({

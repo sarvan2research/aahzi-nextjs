@@ -15,7 +15,59 @@ model GuestUser {
   name         String
   mobileNumber String
   course       String
-  city         String
+  community    String
   cutoffMarks  Int
   createdAt    DateTime @default(now())
 }
+
+model CutOff {
+  id                String          @id @default(auto()) @map("_id") @db.ObjectId
+  collegeCode       Int
+  collegeName       String
+  cutoffDetailsList CutoffDetails[]
+}
+
+model CutoffDetails {
+  id         String  @id @default(auto()) @map("_id") @db.ObjectId
+  courseCode String
+  courseName String
+  year       Int
+  cutOffOC   Float
+  cutOffBC   Float
+  cutOffBCM  Float
+  cutOffMBC  Float
+  cutOffSC   Float
+  cutOffST   Float?
+  cutOffSCA  Float
+  CutOff     CutOff? @relation(fields: [cutOffId], references: [id])
+  cutOffId   String? @db.ObjectId
+}
+
+// model Cutoff_2022 {
+//   id                String            @id @default(auto()) @map("_id") @db.ObjectId
+//   collegeCode       String
+//   collegeName       String
+//   cutoffDetailsList CutOffList_2022[] @relation("CollegeToCutoffDetails")
+// }
+
+// model CutOff {
+//   id String @id @default(auto()) @map("_id") @db.ObjectId
+// }
+
+// model CutOffList_2022 {
+//   id           String      @id @default(auto()) @map("_id") @db.ObjectId
+//   courseCode   String
+//   courseName   String
+//   year         Int
+//   cutOffOC     Int
+//   cutOffBC     Int
+//   cutOffBCM    Int
+//   cutOffMBC    Int
+//   cutoffMBCDNC Int
+//   cutoffMBCV   Int
+//   cutOffSC     Int
+//   cutOffST     Int
+//   cutOffSCA    Int
+//   college      Cutoff_2022 @relation("CollegeToCutoffDetails", fields: [collegeId], references: [id])
+//   collegeId    String      @map("collegeId") @db.ObjectId
+// }

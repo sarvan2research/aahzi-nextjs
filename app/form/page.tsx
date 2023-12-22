@@ -8,13 +8,13 @@ import { FormData } from "../components/formInputs/Input";
 
 const ChatBotForm = () => {
   const [formData, setFormData] = useState<FormData>({
-    name: "Harish",
-    mobileNumber: "9385637533",
+    name: "",
+    mobileNumber: "",
     physicsMarks: 0,
     chemistryMarks: 0,
     mathsMarks: 0,
     course: "",
-    city: "",
+    community: "",
   });
 
   const [errors, setErrors] = useState<Record<string, string>>({});
@@ -22,6 +22,40 @@ const ChatBotForm = () => {
     {}
   );
   const [cutoffMarks, setCutoffMarks] = useState<number | null>(null);
+
+  useEffect(() => {
+    const calculatecutoff = () => {
+      const maths = formData.mathsMarks;
+      const physics = formData.physicsMarks / 2;
+      const chemistry = formData.chemistryMarks / 2;
+
+      const cutoff = maths + physics + chemistry;
+      setCutoffMarks(cutoff);
+    };
+
+    const validateForm = async () => {
+      try {
+        if (Object.values(touchedFields).some((field) => field)) {
+          formSchema.parse(formData);
+          calculatecutoff();
+          setErrors({});
+        }
+      } catch (error) {
+        if (error instanceof ZodError) {
+          const newErrors: Record<string, string> = {};
+          error.errors.forEach((err) => {
+            const path = err.path.join(".");
+            newErrors[path] = err.message;
+          });
+          setErrors(newErrors);
+        } else {
+          console.error("Form has errors. Please check and correct.", error);
+        }
+      }
+    };
+    validateForm();
+    calculatecutoff();
+  }, [formData, touchedFields]);
 
   const handleInputChange = (
     e: ChangeEvent<HTMLInputElement | HTMLSelectElement>
@@ -36,36 +70,6 @@ const ChatBotForm = () => {
 
     setFormData((prevData) => ({ ...prevData, [name]: updatedValue }));
   };
-
-  useEffect(() => {
-    const calculatecutoff = () => {
-      const maths = formData.mathsMarks;
-      const physics = formData.physicsMarks / 2;
-      const chemistry = formData.chemistryMarks / 2;
-
-      const cutoff = maths + physics + chemistry;
-      setCutoffMarks(cutoff);
-    };
-
-    try {
-      formSchema.parse(formData);
-      calculatecutoff();
-      setErrors({});
-    } catch (error) {
-      if (error instanceof ZodError) {
-        const newErrors: Record<string, string> = {};
-        error.errors.forEach((err) => {
-          const path = err.path.join(".");
-          newErrors[path] = err.message;
-          // console.log(newErrors);
-        });
-        setErrors(newErrors);
-      } else {
-        console.error("Form has errors. Please check and correct.", error);
-      }
-    }
-  }, [formData, touchedFields]);
-
   async function userDetail(data: {
     cutoffMarks: number | null;
     mobileNumber: string;
@@ -82,7 +86,6 @@ const ChatBotForm = () => {
 
   const onSubmit = (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    // setErrors({});
     try {
       const parsedFormData = formSchema.parse(formData);
 
@@ -92,16 +95,7 @@ const ChatBotForm = () => {
 
       userDetail(data);
     } catch (error) {
-      // if (error instanceof z.ZodError) {
-      //   const newErrors: Record<string, string> = {};
-      //   error.errors.forEach((err) => {
-      //     const path = err.path.join(".");
-      //     newErrors[path] = err.message;
-      //   });
-      //   setErrors(newErrors);
-      // } else {
-      //   console.error("Form has errors. Please check and correct.", error);
-      // }
+      if (error) throw new Error("Error in catch", error);
     }
   };
 
@@ -142,25 +136,25 @@ const ChatBotForm = () => {
             )}
           </div>
 
-          <div className="grid grid-flow-col">
+          <div className="grid grid-flow-col gap-4">
             <div>
               <select
                 name="course"
-                className="select w-full max-w-xs border-green-500"
+                className="select w-10/12 min-w-max border-green-500"
                 title="Select any Course"
                 onChange={handleInputChange}
                 suppressHydrationWarning={true}
               >
                 <option>Select any Course</option>
-                <option value="mechanical">Mechanical</option>
-                <option value="eee">EEE</option>
-                <option value="ece">ECE</option>
-                <option value="cse">CSE</option>
-                <option value="civil">Civil</option>
-                <option value="aids">AIDS</option>
-                <option value="it">IT</option>
-                <option value="mechatronics">Mechatronics</option>
-                <option value="aiml">AIML</option>
+                <option value="ME">Mechanical</option>
+                <option value="EE">EEE</option>
+                <option value="EC">ECE</option>
+                <option value="CS">CSE</option>
+                <option value="CE">Civil</option>
+                <option value="AIDS">AIDS</option>
+                <option value="IM">IT</option>
+                <option value="MC">Mechatronics</option>
+                <option value="AIML">AIML</option>
               </select>
 
               {errors.course && (
@@ -169,31 +163,31 @@ const ChatBotForm = () => {
             </div>
             <div>
               <select
-                name="city"
-                className="select w-full max-w-xs border-green-500"
-                title="Select your City"
+                name="community"
+                className="select w-10/12 min-w-max border-green-500"
+                title="Select your Community"
                 onChange={handleInputChange}
                 suppressHydrationWarning={true}
               >
-                <option>Select your City</option>
-                <option value="salem">Salem</option>
-                <option value="coimbatore">Coimbatore</option>
-                <option value="erode">Erode</option>
-                <option value="chennai">Chennai</option>
-                <option value="madurai">Madurai</option>
-                <option value="tiruppur">Tiruppur</option>
-                <option value="theni">Theni</option>
-                <option value="rameshwaram">Rameshwaram</option>
-                <option value="krishnagiri">Krishnagiri</option>
+                <option>Select your Community</option>
+                <option value="cutOffOC">OC</option>
+                <option value="cutOffBC">BC</option>
+                <option value="cutOffBCM">BCM</option>
+                <option value="cutOffMBC">MBC</option>
+                <option value="cutOffMBCDNC">MBCDNC</option>
+                <option value="cutOffMBCV">MBCV</option>
+                <option value="cutOffSC">SC</option>
+                <option value="cutOffST">ST</option>
+                <option value="cutOffSCA">SCA</option>
               </select>
 
-              {errors.city && (
-                <p className="text-red-500 text-sm">{errors.city}</p>
+              {errors.community && (
+                <p className="text-red-500 text-sm">{errors.community}</p>
               )}
             </div>
           </div>
 
-          <div className="grid grid-cols-1 gap-x-2 gap-y-4 sm:grid-cols-6">
+          <div className="grid grid-cols-1 gap-x-2 gap-y-4 sm:grid-cols-6 sm:max-w-md">
             <div className="sm:col-span-2">
               <Input
                 id={"physicsMarks"}

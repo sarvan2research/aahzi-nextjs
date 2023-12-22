@@ -31,17 +31,17 @@ const Navbar = () => {
           </button>
         </div>
         <div className="flex-auto gap-6">
-          <div className="flex justify-evenly min-w-full">
-            <Link href={"/"} className="hover:text-rose-500 ">
+          <div className="flex justify-evenly min-w-full max-sm:hidden">
+            {/* <Link href={"/"} className="hover:text-rose-500 ">
               Aahzi
-            </Link>
+            </Link> */}
             <Link href={"/form"} className="hover:text-rose-500">
               Form
             </Link>
-            <Link href={"/admin"} className="hover:text-rose-500">
+            {/* <Link href={"/admin"} className="hover:text-rose-500">
               Admin
-            </Link>
-            <Link href={"/pages/list"} className="hover:text-rose-500">
+            </Link> */}
+            <Link href={"/codet"} className="hover:text-rose-500">
               Collegelist
             </Link>
           </div>
@@ -94,29 +94,29 @@ const Navbar = () => {
       {toggle && (
         <div className="p-4">
           <div aria-labelledby="dropdownDefaultButton">
-            <Link
+            {/* <Link
               href={"/"}
               className="block hover:bg-slate-200 w-fit p-2 hover:text-rose-500 "
             >
               Aahzi
-            </Link>
+            </Link> */}
             <Link
               href={"/form"}
               className="block hover:bg-slate-200 w-fit p-2 hover:text-rose-500"
             >
               Form
             </Link>
-            <Link
+            {/* <Link
               href={"/admin"}
               className="block hover:bg-slate-200 w-fit p-2 hover:text-rose-500"
             >
               Admin
-            </Link>
+            </Link> */}
             <Link
-              href={"/login"}
+              href={"/codet"}
               className="block hover:bg-slate-200 w-fit p-2 hover:text-rose-500"
             >
-              Login
+              College List
             </Link>
           </div>
         </div>

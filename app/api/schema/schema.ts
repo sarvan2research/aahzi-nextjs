@@ -15,7 +15,7 @@ const formSchema = z.object({
     /^\b(?:0|[1-9]\d{0,1}|100)\b$/.test(value.toString())
   ),
   course: string(),
-  city: string(),
+  community: string(),
 });
 
 export default formSchema;

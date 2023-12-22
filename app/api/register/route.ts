@@ -1,29 +1,29 @@
 import { useRouter } from "next/router";
 import { NextResponse } from "next/server";
-import { GuestUser, PrismaClient } from "@prisma/client";
+import { PrismaClient } from "@prisma/client";
 
 const prisma = new PrismaClient();
 
 export async function POST(req: Request) {
-  const router = useRouter();
+  // const router = useRouter();
   if (req.method !== "POST") {
     return new NextResponse("Method not allowed", { status: 405 });
   }
   
   const body = await req.json();
-  const { name, mobileNumber, course, city, cutoffMarks } = body;
+  const { name, mobileNumber, course, community, cutoffMarks } = body;
   
   const user = await prisma.guestUser.create({
     data: {
       name,
       mobileNumber,
       course,
-      city,
+      community,
       cutoffMarks,
     },
   });
 
-  router.push('/api/index');
+  // router.push('/codet');
 
   return NextResponse.json(user);
 }
